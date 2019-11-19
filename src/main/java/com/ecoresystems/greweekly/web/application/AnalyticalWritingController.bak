@@ -1,0 +1,57 @@
+package com.ecoresystems.greweekly.web.application;
+
+
+import com.ecoresystems.greweekly.analyticalwriting.domain.WritingQuestions;
+import com.ecoresystems.greweekly.analyticalwriting.service.AnalyticalWritingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+
+@Controller
+
+@RequestMapping(value = "/analytical_writing")
+@PreAuthorize("hasRole('ROLE_USER')")
+public class AnalyticalWritingController {
+
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
+    @Autowired
+    private AnalyticalWritingService analyticalWritingService;
+
+    @RequestMapping(method= RequestMethod.GET)
+    public String getQuestions(@RequestParam(value="date", required=false)String dateString, Model model){
+        Date date = null;
+        if(null!=dateString) {
+            try {
+                date = DATE_FORMAT.parse(dateString);
+            } catch (ParseException pe) {
+                date = new Date();
+            }
+        }else{
+            date = new Date();
+        }
+        List<WritingQuestions> writingQuestionsList = this.analyticalWritingService.getWritingQuestionForType();
+
+        Random rand = new Random();
+        WritingQuestions randomElement = writingQuestionsList.get(rand.nextInt(writingQuestionsList.size()));
+        model.addAttribute("writingQuestions", randomElement);
+        return "analytical_writing";
+    }
+
+    @GetMapping(value={"/","index"})
+    public String getHomePage(Model model){
+        return "index";
+    }
+}

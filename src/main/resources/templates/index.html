@@ -1,0 +1,21 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}"lang="en">
+<head>
+    <title>Welcome to GRE Weekly</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="jumbotron main-content">
+            <h1>Hey, remember to practice on weekly basis</h1>
+            <p>This is a free web app to help you with GRE general test</p>
+        </div>
+        <div class="container">
+            <h3>What do you want to do?</h3>
+            <ul>
+                <li><a th:href="@{/analytical_writing}">Proceed to analytical writing section</a></li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>
