@@ -2,7 +2,7 @@ package com.ecoresystems.greweekly.analyticalwriting.domain;
 
 import java.util.Date;
 
-public class WritingQuestions {
+public class WritingQuestion {
     private long userId;
     private String password;
     private String salt;

@@ -16,6 +16,10 @@ public class WritingAnswers {
     private String body;
     @Column(name = "QUESTION_ID")
     private int questionId;
+    @Column(name = "QUESTION_TYPE")
+    private short questionType;
+
+
     @Column(name = "ANSWER_TIME")
     private Date answerTime;
 
@@ -57,5 +61,13 @@ public class WritingAnswers {
 
     public void setAnswerTime(Date answerTime) {
         this.answerTime = answerTime;
+    }
+
+    public short getQuestionType() {
+        return questionType;
+    }
+
+    public void setQuestionType(short questionType) {
+        this.questionType = questionType;
     }
 }

@@ -30,10 +30,10 @@
             <td>Question Type</td>
             <td>Question Body</td>
         </tr>
-        <tr th:each="writingQuestion: ${writingQuestions}">
-            <td th:utext="${writingQuestion.questionId}">Question ID</td>
-            <td th:utext="${writingQuestion.questionType}">Question Type</td>
-            <td th:utext="${writingQuestion.questionBody}">Question Body</td>
+        <tr th:each="writingQuestion: ${writingQuestion}">
+            <td th:utext="${writingQuestion.id}">Question ID</td>
+            <td th:utext="${writingQuestion.type}">Question Type</td>
+            <td th:utext="${writingQuestion.body}">Question Body</td>
         </tr>
     </table>
     <form id="responseForm" method="post">

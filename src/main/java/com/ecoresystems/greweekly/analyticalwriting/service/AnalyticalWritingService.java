@@ -1,7 +1,6 @@
 package com.ecoresystems.greweekly.analyticalwriting.service;
 
-import com.ecoresystems.greweekly.analyticalwriting.domain.WritingAnswer;
-import com.ecoresystems.greweekly.analyticalwriting.domain.WritingQuestions;
+import com.ecoresystems.greweekly.analyticalwriting.domain.WritingQuestion;
 import com.ecoresystems.greweekly.data.entity.AnalyticalWriting;
 import com.ecoresystems.greweekly.data.entity.Users;
 import com.ecoresystems.greweekly.data.entity.WritingAnswers;
@@ -11,10 +10,8 @@ import com.ecoresystems.greweekly.data.repository.WritingAnswersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.persistence.criteria.CriteriaBuilder;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -30,16 +27,17 @@ public class AnalyticalWritingService {
         this.writingAnswersRepository = writingAnswersRepository;
     }
 
-    public List<WritingQuestions> getWritingQuestionForType(){
+    public AnalyticalWriting getWritingQuestionForUser(String userMail){
 
         AtomicInteger issueCount = new AtomicInteger(0);
         AtomicInteger argumentCount = new AtomicInteger(0);
-        Users user = this.usersRepository.findByMail("sample@sample.com");
+        Users user = this.usersRepository.findByMail(userMail);
         short typeSelection;
         Iterable<WritingAnswers> answers = (Iterable<WritingAnswers>) this.writingAnswersRepository.findAllByUserId(user.getId());
-
+        List<Integer> answeredQuestions = new ArrayList<Integer>();
         answers.forEach(answer->{
             int questionId = answer.getQuestionId();
+            answeredQuestions.add(questionId);
             AnalyticalWriting analyticalWriting = this.analyticalWritingRepository.findById(questionId);
             short questionType = analyticalWriting.getType();
             if (questionType==0)
@@ -47,35 +45,37 @@ public class AnalyticalWritingService {
             else
                 argumentCount.getAndIncrement();
         });
-
-        if (issueCount.get()>=argumentCount.get())
+        int answeredCount = 0;
+        if (issueCount.get()>=argumentCount.get()){
             typeSelection = (short) 0;
-        else
-            typeSelection = 1;
-
-
-        Iterable<AnalyticalWriting> questions = this.analyticalWritingRepository.findAllByType(typeSelection);
-
-
-        Map<Integer, WritingQuestions> analyticalWritingMap = new HashMap<>();
-
-        questions.forEach(question->{
-            WritingQuestions writingQuestions = new WritingQuestions();
-            writingQuestions.setQuestionId(question.getId());
-            writingQuestions.setQuestionBody(question.getBody());
-            if (question.getType() == 0){
-                writingQuestions.setQuestionType("Issue");
-            }
-            else {
-                writingQuestions.setQuestionType("Argument");
-            }
-            analyticalWritingMap.put(question.getId(),writingQuestions);
-        });
-        List<WritingQuestions> writingQuestions = new ArrayList<>();
-
-        for(Integer questionId:analyticalWritingMap.keySet()){
-            writingQuestions.add(analyticalWritingMap.get(questionId));
+            answeredCount = issueCount.get();
         }
-        return writingQuestions;
+        else{
+            typeSelection = (short)1;
+            answeredCount = argumentCount.get();
+        }
+
+
+
+        List<AnalyticalWriting> questions = this.analyticalWritingRepository.findAllByType(typeSelection);
+        AnalyticalWriting returnQuestion = new AnalyticalWriting();
+        int loopCounter = 0;
+        if (answeredCount < questions.size()){
+            while (true){
+                Random rand = new Random();
+                AnalyticalWriting randomElement = questions.get(rand.nextInt(questions.size()));
+                if (!answeredQuestions.contains(randomElement.getId())){
+                    returnQuestion = randomElement;
+                    break;
+                }
+                else if (loopCounter > 100){
+                    break;
+                }
+                loopCounter ++;
+            }
+
+        }
+
+        return returnQuestion;
     }
 }
