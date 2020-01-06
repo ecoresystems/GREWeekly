@@ -975,3 +975,4 @@ INSERT INTO AUTH_USER_GROUP (USER_MAIL,AUTH_GROUP) VALUES ('sample@sample.com','
 INSERT INTO AUTH_USER_GROUP (USER_MAIL,AUTH_GROUP) VALUES ('sample@sample.com','USER');
 INSERT INTO AUTH_USER_GROUP (USER_MAIL,AUTH_GROUP) VALUES ('sample@sample.com','INSTRUCTOR');
 INSERT INTO WRITING_ANSWERS (USER_ID,ANSWER_BODY,QUESTION_ID,QUESTION_TYPE,ANSWER_TIME) VALUES (1,'<p>Fot the GRE Writing question this would be the test if te￿he sample which could be used to populate the database it-self as well as provide a concrte example for the spring J2EE framework to be futher tested</p>',6,0,'2019-10-1 13:00:00');
+INSERT INTO WRITING_ANSWERS (USER_ID,ANSWER_BODY,QUESTION_ID,QUESTION_TYPE,ANSWER_TIME) VALUES (1,'<p>Fot the GRE Writing question this would be the test if te￿he sample which could be used to populate the database it-self as well as provide a concrte example for the spring J2EE framework to be futher tested</p>',222,1,'2019-10-1 13:00:00');

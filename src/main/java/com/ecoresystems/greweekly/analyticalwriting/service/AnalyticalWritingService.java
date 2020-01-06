@@ -1,6 +1,6 @@
 package com.ecoresystems.greweekly.analyticalwriting.service;
 
-import com.ecoresystems.greweekly.analyticalwriting.domain.WritingQuestion;
+import com.ecoresystems.greweekly.analyticalwriting.domain.WritingAnswer;
 import com.ecoresystems.greweekly.data.entity.AnalyticalWriting;
 import com.ecoresystems.greweekly.data.entity.Users;
 import com.ecoresystems.greweekly.data.entity.WritingAnswers;
@@ -26,6 +26,22 @@ public class AnalyticalWritingService {
         this.usersRepository = usersRepository;
         this.writingAnswersRepository = writingAnswersRepository;
     }
+    public List<WritingAnswer> getWritingAnswersForUser(String userMail){
+        Users user = usersRepository.findByMail(userMail);
+        Iterable<WritingAnswers> answers = writingAnswersRepository.findAllByUserId(user.getId());
+        List<WritingAnswer> writingAnswerList = new ArrayList<>();
+        answers.forEach(answer->{
+            WritingAnswer writingAnswer = new WritingAnswer();
+            writingAnswer.setUserId(answer.getUserId());
+            writingAnswer.setAnswerBody(answer.getBody());
+            writingAnswer.setQuestionId(answer.getQuestionId());
+            writingAnswer.setQuestionType(answer.getQuestionType());
+            writingAnswer.setAnswerTime(answer.getAnswerTime());
+            writingAnswer.setUserMail(userMail);
+            writingAnswerList.add(writingAnswer);
+        });
+        return writingAnswerList;
+    }
 
     public AnalyticalWriting getWritingQuestionForUser(String userMail){
 
@@ -36,10 +52,8 @@ public class AnalyticalWritingService {
         Iterable<WritingAnswers> answers = (Iterable<WritingAnswers>) this.writingAnswersRepository.findAllByUserId(user.getId());
         List<Integer> answeredQuestions = new ArrayList<Integer>();
         answers.forEach(answer->{
-            int questionId = answer.getQuestionId();
-            answeredQuestions.add(questionId);
-            AnalyticalWriting analyticalWriting = this.analyticalWritingRepository.findById(questionId);
-            short questionType = analyticalWriting.getType();
+            answeredQuestions.add(answer.getQuestionId());
+            short questionType = answer.getQuestionType();
             if (questionType==0)
                 issueCount.getAndIncrement();
             else
@@ -47,15 +61,13 @@ public class AnalyticalWritingService {
         });
         int answeredCount = 0;
         if (issueCount.get()>=argumentCount.get()){
-            typeSelection = (short) 0;
+            typeSelection = (short) 1;
             answeredCount = issueCount.get();
         }
         else{
-            typeSelection = (short)1;
+            typeSelection = (short) 0;
             answeredCount = argumentCount.get();
         }
-
-
 
         List<AnalyticalWriting> questions = this.analyticalWritingRepository.findAllByType(typeSelection);
         AnalyticalWriting returnQuestion = new AnalyticalWriting();

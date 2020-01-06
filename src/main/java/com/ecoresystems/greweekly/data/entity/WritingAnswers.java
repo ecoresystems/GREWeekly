@@ -1,6 +1,8 @@
 package com.ecoresystems.greweekly.data.entity;
 
 import javax.persistence.*;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
@@ -8,7 +10,7 @@ import java.util.Date;
 public class WritingAnswers {
     @Id
     @Column(name = "ANSWER_ID")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "USER_ID")
     private long userId;
@@ -18,10 +20,8 @@ public class WritingAnswers {
     private int questionId;
     @Column(name = "QUESTION_TYPE")
     private short questionType;
-
-
     @Column(name = "ANSWER_TIME")
-    private Date answerTime;
+    private Timestamp answerTime;
 
     public long getId() {
         return id;
@@ -55,11 +55,11 @@ public class WritingAnswers {
         this.questionId = questionId;
     }
 
-    public Date getAnswerTime() {
+    public Timestamp getAnswerTime() {
         return answerTime;
     }
 
-    public void setAnswerTime(Date answerTime) {
+    public void setAnswerTime(Timestamp answerTime) {
         this.answerTime = answerTime;
     }
 
