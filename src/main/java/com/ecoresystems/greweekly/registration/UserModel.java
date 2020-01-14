@@ -1,13 +1,20 @@
 package com.ecoresystems.greweekly.registration;
 
-import com.ecoresystems.greweekly.auth.User;
 import com.ecoresystems.greweekly.data.entity.Users;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.Column;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
-public class UserModel extends Users {
+@Validated
+public class UserModel{
+    @NotNull
+    @NotEmpty
     private String mail;
+    @NotNull
+    @NotEmpty
     private String password;
     private String userName;
     private short age;
@@ -62,13 +69,14 @@ public class UserModel extends Users {
         this.nationality = nationality;
     }
 
-    public void translateModelToUser(){
-        User user = new User();
+    Users translateModelToUser(){
+        Users user = new Users();
         user.setMail(this.mail);
         user.setPassword(new BCryptPasswordEncoder().encode(this.password));
         user.setUserName(this.userName);
         user.setCountry(this.country);
         user.setNationality(this.nationality);
         user.setAge(this.age);
+        return user;
     }
 }
