@@ -1,34 +1,18 @@
-package com.ecoresystems.greweekly.auth;
+package com.ecoresystems.greweekly.registration;
 
-import javax.persistence.*;
+import com.ecoresystems.greweekly.auth.User;
+import com.ecoresystems.greweekly.data.entity.Users;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@Entity
-@Table(name = "USERS")
-public class User {
-    @Id
-    @Column(name = "USER_ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @Column(name = "MAIL", nullable = false, unique = true)
+import javax.persistence.Column;
+
+public class UserModel extends Users {
     private String mail;
-    @Column(name = "PASSWORD")
     private String password;
-    @Column(name = "USER_NAME")
     private String userName;
-    @Column(name = "AGE")
     private short age;
-    @Column(name = "COUNTRY")
     private String country;
-    @Column(name = "NATIONALITY")
     private String nationality;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getMail() {
         return mail;
@@ -76,5 +60,15 @@ public class User {
 
     public void setNationality(String nationality) {
         this.nationality = nationality;
+    }
+
+    public void translateModelToUser(){
+        User user = new User();
+        user.setMail(this.mail);
+        user.setPassword(new BCryptPasswordEncoder().encode(this.password));
+        user.setUserName(this.userName);
+        user.setCountry(this.country);
+        user.setNationality(this.nationality);
+        user.setAge(this.age);
     }
 }

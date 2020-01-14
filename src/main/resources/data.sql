@@ -965,9 +965,9 @@ INSERT INTO ANALYTICAL_WRITING (QUESTION_TYPE,QUESTION_BODY) VALUES (1,'<p>Archa
 <p>Write a response in which you discuss one or more alternative explanations that could rival the proposed explanation and explain how your explanation(s) can plausibly account for the facts presented in the argument.</p>
 </div>');
 
-INSERT INTO USERS (MAIL,GENDER,BIRTHDAY,COUNTRY,NATIONALITY,PASSWORD) VALUES ('sample@sample.com',1,'2000-1-1','Japan','Japan','$2a$10$NYsYxMHrGnUeUMP8DkPkeOU2AddAOf19svbcM9HbdY6x/GK/6Wl4m');
-INSERT INTO USERS (MAIL,GENDER,BIRTHDAY,COUNTRY,NATIONALITY,PASSWORD) VALUES ('user@sample.com',1,'2000-1-1','Japan','Japan','$2a$10$NYsYxMHrGnUeUMP8DkPkeOU2AddAOf19svbcM9HbdY6x/GK/6Wl4m');
-INSERT INTO USERS (MAIL,GENDER,BIRTHDAY,COUNTRY,NATIONALITY,PASSWORD) VALUES ('instructor@sample.com',1,'2000-1-1','Japan','Japan','$2a$10$NYsYxMHrGnUeUMP8DkPkeOU2AddAOf19svbcM9HbdY6x/GK/6Wl4m');
+INSERT INTO USERS (MAIL,USER_NAME,AGE,COUNTRY,NATIONALITY,PASSWORD) VALUES ('sample@sample.com','Edogawa Conan',1,'Japan','Japan','$2a$10$NYsYxMHrGnUeUMP8DkPkeOU2AddAOf19svbcM9HbdY6x/GK/6Wl4m');
+INSERT INTO USERS (MAIL,USER_NAME,AGE,COUNTRY,NATIONALITY,PASSWORD) VALUES ('user@sample.com','Edogawa Conan',1,'Japan','Japan','$2a$10$NYsYxMHrGnUeUMP8DkPkeOU2AddAOf19svbcM9HbdY6x/GK/6Wl4m');
+INSERT INTO USERS (MAIL,USER_NAME,AGE,COUNTRY,NATIONALITY,PASSWORD) VALUES ('instructor@sample.com','Edogawa Conan',1,'Japan','Japan','$2a$10$NYsYxMHrGnUeUMP8DkPkeOU2AddAOf19svbcM9HbdY6x/GK/6Wl4m');
 INSERT INTO AUTH_USER_GROUP (USER_MAIL,AUTH_GROUP) VALUES ('instructor@sample.com','INSTRUCTOR');
 INSERT INTO AUTH_USER_GROUP (USER_MAIL,AUTH_GROUP) VALUES ('instructor@sample.com','USER');
 INSERT INTO AUTH_USER_GROUP (USER_MAIL,AUTH_GROUP) VALUES ('user@sample.com','USER');

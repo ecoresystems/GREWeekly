@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="en">
+<head>
+    <!--    Load Required CSS-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <!--    Load axios library and vue framework-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <title>Home</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div id="app">
+        <v-app id="inspire">
+            <v-app-bar
+                    :clipped-left="$vuetify.breakpoint.lgAndUp"
+                    app
+                    color="bg-dark"
+                    dark
+            >
+                <!--                <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>-->
+                <span class="title ml-3 mr-5">Ecore Systems&nbsp;<span class="font-weight-light">Customizable Language Learning Support System</span></span>
+                <v-spacer></v-spacer>
+
+
+                <div class="nav-link">Welcome
+                    <span sec:authentication="name"></span>
+                </div>
+
+                <div sec:authorize="!isAuthenticated()">
+                    <a class="nav-link" th:href="@{/login}">Login</a>
+                </div>
+
+                <div sec:authorize="isAuthenticated()">
+                    <a class="nav-link" th:href="@{/logout}">Logout</a>
+                </div>
+
+            </v-app-bar>
+
+            <v-content>
+                <v-container
+                        class="grey lighten-5"
+                >
+
+                    <v-form
+                            ref="form"
+                            v-model="valid"
+                            lazy-validation
+                    >
+                        <v-row justify="left">
+                            <v-card-text class="headline mb-1">Registration Page</v-card-text>
+                            <v-card-text>Field with "*" are required fields</v-card-text>
+                        </v-row>
+                        <v-row justify="center">
+                            <v-col md="6">
+                                <!--                    UserName:-->
+                                <v-text-field
+                                        v-model="userName"
+                                        :counter="10"
+                                        :rules="userNameRules"
+                                        label="User Name*"
+                                        required
+                                ></v-text-field>
+                            </v-col>
+
+                            <!--                    E-Mail-->
+                            <v-col md="6">
+                                <v-text-field
+                                        v-model="email"
+                                        :rules="emailRules"
+                                        label="E-mail*"
+                                        required
+                                ></v-text-field>
+                            </v-col>
+                        </v-row>
+
+                        <!--                    Password:-->
+                        <v-row justify="center">
+                            <v-col md="6">
+                                <v-text-field
+                                        v-model="password"
+                                        :rules="passwordRules"
+                                        label="Password*"
+                                        required
+                                        type="password"
+                                ></v-text-field>
+                            </v-col>
+
+                            <!--                    Confirm Password:-->
+                            <v-col md="6">
+                                <v-text-field
+                                        v-model="password_confirm"
+                                        :rules="passwordConfirmRules"
+                                        label="Confirm Password*"
+                                        type="password"
+                                        required
+                                ></v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row justify="left">
+                            <v-checkbox
+                                    v-model="checkbox"
+                                    :rules="[v => !!v || 'You must agree to continue!']"
+                                    label="Agree terms and etc."
+                                    required
+                            ></v-checkbox>
+                        </v-row>
+
+                        <v-row justify="center">
+                            <!--                    Birthday:-->
+                            <v-col md="6">
+                                <v-select
+                                        v-model="age"
+                                        :items="age_items"
+                                        label="Age"
+                                ></v-select>
+                            </v-col>
+                        </v-row>
+
+
+                        <!--                    Nationality:-->
+                        <v-row justify="center">
+                            <v-col md="6">
+                                <v-text-field
+                                        v-model="nationality"
+                                        :counter="10"
+                                        label="Nationality"
+                                ></v-text-field>
+                            </v-col>
+
+                            <!--                    Country:-->
+                            <v-col md="6">
+                                <v-text-field
+                                        v-model="country"
+                                        label="Country of Residence"
+                                ></v-text-field>
+                            </v-col>
+                        </v-row>
+
+
+                        <v-row justify="center">
+
+                            <v-btn
+                                    :disabled="!valid"
+                                    color="success"
+                                    class="mr-4"
+                                    @click="submit"
+                            >
+                                Submit
+                            </v-btn>
+
+                            <v-btn
+                                    color="error"
+                                    class="mr-4"
+                                    @click="reset"
+                            >
+                                Reset Form
+                            </v-btn>
+
+                            <v-btn
+                                    color="warning"
+                                    @click="resetValidation"
+                            >
+                                Reset Validation
+                            </v-btn>
+                        </v-row>
+                    </v-form>
+                </v-container>
+            </v-content>
+
+        </v-app>
+    </div>
+</div>
+<script>
+    Vue.config.devtools = true;
+    var vm = new Vue({
+        el: '#app',
+        vuetify: new Vuetify(),
+        data: () => ({
+            valid: true,
+            userName: '',
+            userNameRules: [
+                v => !!v || 'UserName is required',
+                v => (v && v.length <= 10) || 'Name must be less than 10 characters',
+            ],
+            email: '',
+            emailRules: [
+                v => !!v || 'E-mail is required',
+                v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+            ],
+            age: 0,
+            age_items: [
+                1,
+                2
+            ],
+            nationality: '',
+            country: '',
+            password: '',
+            passwordRules: [
+                v => !!v || 'Password is required',
+                v => /(?=.*[A-Z])/.test(v) || 'Must have one uppercase character',
+                v => /(?=.*\d)/.test(v) || 'Must have one number',
+                v => /([!@$%])/.test(v) || 'Must have one special character [!@#$%]',
+                v => (v && v.length >= 8) || 'Password must be at least 8 characters'
+            ],
+            password_confirm: '',
+            passwordConfirmRules: [
+                v => !!v || 'Password confirmation is required',
+                v => (v && v.length >= 8) || 'Password must be at least 8 characters',
+                v => (v && v === vm.password) || 'Password mismatch'
+            ],
+            checkbox: false,
+        }),
+
+        methods: {
+            submit() {
+                var reqData = {
+                    sso_kid: vm.SSO_KID,
+                    schoolIssuedId: vm.SIID,
+                    username: vm.userName,
+                    mail: vm.email,
+                    gender: vm.gender,
+                    country: vm.country,
+                    nationality: vm.nationality,
+                    password: vm.password
+                }
+                if (vm.SIID.length>0){
+                    axios.post('/api/registration', reqData).then(function (response) {
+                        console.log(response);
+                        var responseData = response.data;
+                        var redirectURL = responseData.redirectLink + "/userName/" + responseData.userName;
+                        window.location.href = redirectURL;
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                }
+                else{
+                    alert("Insufficient Information")
+                }
+
+            },
+            validate() {
+                if (this.$refs.form.validate()) {
+                    this.snackbar = true
+                }
+            },
+            reset() {
+                this.$refs.form.reset()
+            },
+            resetValidation() {
+                this.$refs.form.resetValidation()
+            },
+        },
+    })
+</script>
