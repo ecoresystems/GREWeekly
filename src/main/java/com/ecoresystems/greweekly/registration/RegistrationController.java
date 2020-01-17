@@ -1,5 +1,7 @@
 package com.ecoresystems.greweekly.registration;
 
+import com.ecoresystems.greweekly.auth.AuthGroup;
+import com.ecoresystems.greweekly.auth.AuthGroupRepository;
 import com.ecoresystems.greweekly.data.entity.Users;
 import com.ecoresystems.greweekly.data.repository.UsersRepository;
 import org.springframework.http.HttpStatus;
@@ -20,30 +22,41 @@ import java.io.UnsupportedEncodingException;
 public class RegistrationController {
 
     private final UsersRepository usersRepository;
+    private final InfoValidator infoValidator;
+    private final AuthGroupRepository authGroupRepository;
 
-    public RegistrationController(UsersRepository usersRepository) {
+    public RegistrationController(UsersRepository usersRepository,InfoValidator infoValidator,AuthGroupRepository authGroupRepository) {
         super();
         this.usersRepository = usersRepository;
+        this.authGroupRepository = authGroupRepository;
+        this.infoValidator = infoValidator;
     }
 
     @PostMapping(value = "/registration_api")
     public ResponseEntity registration(@Valid @RequestBody UserModel userModel, BindingResult bindingResult, WebRequest request, Errors errors) throws UnsupportedEncodingException {
         try {
-            UserModel currentUser = userModel;
             // Manual validation in controller, change to custom validator later
-            InfoValidator infoValidator = new InfoValidator();
-            System.out.println(infoValidator.EmailValidator(userModel.getMail()));
-            System.out.println("User E-Mail: " + currentUser.getMail());
-            System.out.println("User Name:" + currentUser.getUserName());
-            System.out.println("User Country: " + currentUser.getCountry());
-            System.out.println("User Nationality: " + currentUser.getNationality());
-            System.out.println("User age: " + Integer.toString(currentUser.getAge()));
-            System.out.println("User Password: " + currentUser.getPassword());
+            if (!infoValidator.EmailValidator(userModel.getMail()).equals("passed")){
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(infoValidator.EmailValidator(userModel.getMail()));
+            }
+            System.out.println("User E-Mail: " + userModel.getMail()+" validation successful");
+            System.out.println("User Name:" + userModel.getUserName());
+            System.out.println("User Country: " + userModel.getCountry());
+            System.out.println("User Nationality: " + userModel.getNationality());
+            System.out.println("User age: " + Integer.toString(userModel.getAge()));
+            if (!infoValidator.PasswordValidator(userModel.getPassword(),userModel.getPasswordConfirmation()).equals("passed")){
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(infoValidator.PasswordValidator(userModel.getPassword(),userModel.getPasswordConfirmation()));
+            }
+            System.out.println("User Password: " + userModel.getPassword()+ " validation passed");
             this.usersRepository.save(userModel.translateModelToUser());
-            String temp_mail = userModel.getMail();
+            this.authGroupRepository.save(userModel.translateModelToAuthGroup());
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body("Successfully created user: " + currentUser.getMail());
+                    .body("Successfully created user: " + userModel.getMail());
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
