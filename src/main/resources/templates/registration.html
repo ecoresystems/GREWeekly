@@ -97,7 +97,7 @@
                             <!--                    Confirm Password:-->
                             <v-col md="6">
                                 <v-text-field
-                                        v-model="password_confirm"
+                                        v-model="passwordConfirmation"
                                         :rules="passwordConfirmRules"
                                         label="Confirm Password*"
                                         type="password"
@@ -215,18 +215,21 @@
                 v => (v && v === vm.password) || 'Password mismatch'
             ],
             checkbox: false,
+                age:'',
         }),
 
         methods: {
             submit() {
                 var reqData = {
-                    username: vm.userName,
+                    userName: vm.userName,
                     mail: vm.email,
                     country: vm.country,
                     nationality: vm.nationality,
-                    password: vm.password
+                    password: vm.password,
+                    passwordConfirmation:vm.passwordConfirmation,
+                    age:vm.age
                 }
-                if (vm.SIID.length>0){
+                if (vm.userName.length>0){
                     axios.post('/api/registration', reqData).then(function (response) {
                         console.log(response);
                         var responseData = response.data;

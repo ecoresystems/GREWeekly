@@ -29,8 +29,8 @@ public class RegistrationAPIController {
         this.infoValidator = infoValidator;
     }
 
-    @PostMapping(value = "/registration_api")
-    public ResponseEntity registration(@Valid @RequestBody UserModel userModel, BindingResult bindingResult, WebRequest request, Errors errors) throws UnsupportedEncodingException {
+    @PostMapping(value = "/api/registration")
+    public ResponseEntity registration(@RequestBody UserModel userModel, BindingResult bindingResult, WebRequest request, Errors errors) throws UnsupportedEncodingException {
         try {
             // Manual validation in controller, change to custom validator later
             if (!infoValidator.EmailValidator(userModel.getMail()).equals("passed")){
@@ -38,11 +38,9 @@ public class RegistrationAPIController {
                         .status(HttpStatus.BAD_REQUEST)
                         .body(infoValidator.EmailValidator(userModel.getMail()));
             }
-            System.out.println("User E-Mail: " + userModel.getMail()+" validation successful");
-            System.out.println("User Name:" + userModel.getUserName());
-            System.out.println("User Country: " + userModel.getCountry());
-            System.out.println("User Nationality: " + userModel.getNationality());
-            System.out.println("User age: " + Integer.toString(userModel.getAge()));
+            System.out.println(userModel.getPassword());
+            System.out.println(userModel.getPasswordConfirmation());
+
             if (!infoValidator.PasswordValidator(userModel.getPassword(),userModel.getPasswordConfirmation()).equals("passed")){
                 return ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)
