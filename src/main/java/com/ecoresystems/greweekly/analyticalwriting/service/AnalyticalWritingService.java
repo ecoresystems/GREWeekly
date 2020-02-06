@@ -43,6 +43,10 @@ public class AnalyticalWritingService {
         return writingAnswerList;
     }
 
+    public List<AnalyticalWriting> getAllWritingQuestions(){
+        return this.analyticalWritingRepository.findAll();
+    }
+
     public AnalyticalWriting getWritingQuestionForUser(String userMail){
 
         AtomicInteger issueCount = new AtomicInteger(0);

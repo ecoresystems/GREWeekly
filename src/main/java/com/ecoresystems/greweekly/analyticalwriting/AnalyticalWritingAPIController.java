@@ -5,10 +5,9 @@ import com.ecoresystems.greweekly.analyticalwriting.domain.WritingAnswer;
 import com.ecoresystems.greweekly.analyticalwriting.service.AnalyticalWritingService;
 import com.ecoresystems.greweekly.auth.User;
 import com.ecoresystems.greweekly.auth.UserRepository;
-import com.ecoresystems.greweekly.data.entity.WritingAnswers;
 import com.ecoresystems.greweekly.data.repository.WritingAnswersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
@@ -40,7 +39,9 @@ public class AnalyticalWritingAPIController {
     }
 
     @GetMapping(value = "/get_answers")
-    public @ResponseBody List<WritingAnswer> getAnswers() throws UnsupportedEncodingException{
-        return analyticalWritingService.getWritingAnswersForUser("sample@sample.com");
+    public @ResponseBody List<WritingAnswer> getAnswers(Authentication authentication) throws UnsupportedEncodingException{
+//        String userMail = authentication.getName();
+        String userMail = "sample@sample.com";
+        return analyticalWritingService.getWritingAnswersForUser(userMail);
     }
 }

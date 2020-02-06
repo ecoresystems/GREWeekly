@@ -10,4 +10,5 @@ import java.util.List;
 public interface AnalyticalWritingRepository extends CrudRepository<AnalyticalWriting,Integer> {
     List<AnalyticalWriting> findAllByType(short type);
     AnalyticalWriting findById(int id);
+    List<AnalyticalWriting> findAll();
 }

@@ -1,10 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="en">
 <head>
+    <!--    Load Required CSS-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <!--    Load axios library and vue framework-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Saved Answers</title>
 </head>
 <body>
+<div class="container">
+    <div id="app">
+        <v-app id="inspire">
+            <v-app-bar
+                    :clipped-left="$vuetify.breakpoint.lgAndUp"
+                    app
+                    color="bg-dark"
+                    dark
+            >
+                <!--                <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>-->
+                <span class="title ml-3 mr-5">Ecore Systems&nbsp;<span
+                        class="font-weight-light">GRE Weekly Application</span></span>
+                <v-spacer></v-spacer>
 
-</body>
-</html>
+
+                <div class="nav-link">Welcome
+                    <span sec:authentication="name"></span>
+                </div>
+
+                <div sec:authorize="!isAuthenticated()">
+                    <a class="nav-link" th:href="@{/login}">Login</a>
+                </div>
+
+                <div sec:authorize="isAuthenticated()">
+                    <a class="nav-link" th:href="@{/logout}">Logout</a>
+                </div>
+
+            </v-app-bar>
+
+            <v-content>
+                <v-container
+                        class="grey lighten-5"
+                >
+                <li v-for="answer in answer_lit">
+                    {{answer.answerBody}}}
+                </li>
+                </v-container>
+            </v-content>
+
+        </v-app>
+    </div>
+</div>
+<script>
+    Vue.config.devtools = true;
+    var vm = new Vue({
+        el: '#app',
+        vuetify: new Vuetify(),
+        data: () => ({
+            answer_list:[]
+        }),
+
+        methods: {
+            submit() {
+                    axios.post('/api/get_answers', reqData).then(function (response) {
+                        console.log(response);
+                        var responseData = response.data;
+                        var redirectURL = responseData.redirectLink + "/userName/" + responseData.userName;
+                        window.location.href = redirectURL;
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+
+            },
+        },
+    })
+</script>
