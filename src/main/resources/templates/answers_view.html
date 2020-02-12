@@ -50,34 +50,41 @@
                 <v-container
                         class="grey lighten-5"
                 >
-                <li v-for="answer in answer_lit">
-                    {{answer.answerBody}}}
-                </li>
+                    This is a division where I can write anything and see if it works
+                        {{answer_list}}}
                 </v-container>
             </v-content>
-
         </v-app>
     </div>
 </div>
 <script>
     Vue.config.devtools = true;
+
     var vm = new Vue({
         el: '#app',
         vuetify: new Vuetify(),
         data: () => ({
-            answer_list:[]
+            answer_list: [],
+            question_list: [],
         }),
 
+        created: function () {
+            this.inIt();
+        },
+        mounted: function () {
+        },
+
         methods: {
-            submit() {
-                    axios.post('/api/get_answers', reqData).then(function (response) {
-                        console.log(response);
-                        var responseData = response.data;
-                        var redirectURL = responseData.redirectLink + "/userName/" + responseData.userName;
-                        window.location.href = redirectURL;
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
+            inIt() {
+                axios.get('/api/get_answers').then(function (response) {
+                    console.log(response);
+                    var responseData = response.data;
+                    this.answer_list = responseData.answers;
+                    this.question_list = responseData.questions;
+                    console.log(this.answer_list);
+                }).catch(function (error) {
+                    console.log(error);
+                });
 
             },
         },
