@@ -10,9 +10,6 @@
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <!--    Load axios library and vue framework-->
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <meta charset="UTF-8">
     <title>Saved Answers</title>
 </head>
@@ -50,23 +47,25 @@
                 <v-container
                         class="grey lighten-5"
                 >
-                    This is a division where I can write anything and see if it works
-                        {{answer_list}}}
+                    <li v-for="question in question_list"></li>
                 </v-container>
             </v-content>
         </v-app>
     </div>
 </div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
 <script>
     Vue.config.devtools = true;
 
     var vm = new Vue({
         el: '#app',
         vuetify: new Vuetify(),
-        data: () => ({
-            answer_list: [],
-            question_list: [],
-        }),
+        data: {
+            answer_list: '',
+            question_list: ''
+        },
 
         created: function () {
             this.inIt();
@@ -75,13 +74,14 @@
         },
 
         methods: {
-            inIt() {
+            inIt: function () {
+                var self = this;
                 axios.get('/api/get_answers').then(function (response) {
                     console.log(response);
                     var responseData = response.data;
-                    this.answer_list = responseData.answers;
-                    this.question_list = responseData.questions;
-                    console.log(this.answer_list);
+                    self.answer_list = responseData.answers;
+                    self.question_list = responseData.questions;
+                    console.log(self.answer_list);
                 }).catch(function (error) {
                     console.log(error);
                 });
