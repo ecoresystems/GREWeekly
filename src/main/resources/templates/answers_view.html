@@ -47,7 +47,28 @@
                 <v-container
                         class="grey lighten-5"
                 >
-                    <li v-for="question in question_list"></li>
+                    <v-row >
+                            <v-card
+                                    class="mx-auto mt-3"
+                                    max-width="344"
+                                    v-for="question in question_list"
+                                    hover="true"
+
+                            >
+
+                                <v-card-text>
+                                    <div>{{question.id}}</div>
+                                    <p class="display-1 text--primary">
+                                        {{question.type}}
+                                    </p>
+
+                                    <div v-html="question.body"></div>
+                                </v-card-text>
+
+                            </v-card>
+                        <v-spacer></v-spacer>
+                    </v-row>
+
                 </v-container>
             </v-content>
         </v-app>
@@ -81,7 +102,7 @@
                     var responseData = response.data;
                     self.answer_list = responseData.answers;
                     self.question_list = responseData.questions;
-                    console.log(self.answer_list);
+                    console.log(self.question_list);
                 }).catch(function (error) {
                     console.log(error);
                 });
